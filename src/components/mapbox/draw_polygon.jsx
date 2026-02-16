@@ -1,6 +1,6 @@
 import PropTypes from "prop-types"
-import {useCallback, useEffect, useRef, useState} from "react"
-import {Box, IconButton, Divider, Tooltip} from "@mui/material"
+import { useCallback, useEffect, useRef, useState } from "react"
+import { Box, IconButton, Divider, Tooltip } from "@mui/material"
 import {
     PentagonOutlined as DrawPolygonIcon,
     HighlightAlt as SelectPolygonIcon,
@@ -8,14 +8,13 @@ import {
     JoinFull as UnionPolygonIcon,
 } from "@mui/icons-material"
 import * as turf from "@turf/turf"
-import {TerraDrawMapLibreGLAdapter} from "terra-draw-maplibre-gl-adapter"
-import {TerraDraw, TerraDrawPolygonMode, TerraDrawSelectMode, TerraDrawRenderMode} from "terra-draw"
-import {v4 as uuid_v4} from "uuid"
+import { TerraDrawMapLibreGLAdapter } from "terra-draw-maplibre-gl-adapter"
+import { TerraDraw, TerraDrawPolygonMode, TerraDrawSelectMode, TerraDrawRenderMode } from "terra-draw"
+import { v4 as uuid_v4 } from "uuid"
 import _ from "ansuko"
-import {waitAnimated} from "@_manager/util.jsx"
-import {useDialog} from "@_components/dialog.jsx"
-import {useEveListen} from "react-eve-hook"
-import {EVENT_RESET_DATA} from "@team4am/fp-core"
+import { useDialog } from "@_components/dialog.jsx"
+import { useEveListen } from "react-eve-hook"
+import { EVENT_RESET_DATA } from "@team4am/fp-core"
 
 const DrawMode = {
     Drawing: "drawing",
@@ -41,7 +40,7 @@ const styles = {
     }
 }
 
-const MapboxDrawPolygon = ({map, style, styleKey, disable, geojson, onChange, controlProps}) => {
+const MapboxDrawPolygon = ({ map, style, styleKey, disable, geojson, onChange, controlProps }) => {
 
     const isInitialized = useRef(false)
     const isUpdatingInternally = useRef(false)
@@ -82,37 +81,32 @@ const MapboxDrawPolygon = ({map, style, styleKey, disable, geojson, onChange, co
             g.geometry.coordinates = [[_.first(g.geometry.coordinates)]]
         }
         const gjson = fixedTerraDrawCoordinates(g.geometry)
-        console.log("[New union polygon]", gjson)
+
         isInitialized.current = false
-        waitAnimated(() => {
-            onChange({geojson: gjson})
+        _.waited(() => {
+            onChange({ geojson: gjson })
         }, 10)
     }, [geojson])
 
     const drawPolygon = useCallback(() => {
-        console.log("[DrawPolygon]", "start draw", drawInstanceRef.current, geojson)
+
         if (!drawInstanceRef.current || !geojson) { return }
         const draw = drawInstanceRef.current
-        console.log("[DrawPolygon]", "get instance", typeof draw.clear, draw)
-        try { draw.clear() } catch {}
-        console.log("[Draw Polygon] Draw polygon ready")
+
+        try { draw.clear() } catch { }
+
         isUpdatingInternally.current = true
         const features = geojson.coordinates.map(coordinates => ({
             id: uuid_v4(),
-            geometry: {type: "Polygon", coordinates},
-            properties: {mode: "polygon"},
+            geometry: { type: "Polygon", coordinates },
+            properties: { mode: "polygon" },
             type: "Feature"
         }))
-        console.log("[DrawPolygon]", "フィーチャー追加", features)
+
         features.forEach(feature => {
             draw.addFeatures([feature])
         })
 
-        waitAnimated(() => {
-            console.log(draw.getSnapshot())
-        }, 30)
-
-        // 境界にフィット
         try {
             const bbox = turf.bbox(geojson)
             map.fitBounds(bbox, {
@@ -125,7 +119,7 @@ const MapboxDrawPolygon = ({map, style, styleKey, disable, geojson, onChange, co
             console.error("[DrawPolygon]", "bbox計算エラー", e)
         }
 
-        waitAnimated(() => {
+        _.waited(() => {
             isUpdatingInternally.current = false
         }, 10)
 
@@ -138,20 +132,18 @@ const MapboxDrawPolygon = ({map, style, styleKey, disable, geojson, onChange, co
         isUpdatingInternally.current = true
         isInitialized.current = false
 
-        console.log("[Draw Polygon] Draw polygon processing started")
-
         if (drawInstanceRef.current) {
             try {
                 drawInstanceRef.current.clear()
                 drawInstanceRef.current.stop()
-            } catch {}
+            } catch { }
             drawInstanceRef.current = null
         }
 
         const draw = new TerraDraw({
-            adapter: new TerraDrawMapLibreGLAdapter({map}),
+            adapter: new TerraDrawMapLibreGLAdapter({ map }),
             modes: [
-                new TerraDrawRenderMode({modeName: "render", styles: {}}),
+                new TerraDrawRenderMode({ modeName: "render", styles: {} }),
                 new TerraDrawPolygonMode({
                     modeName: "polygon",
                     pointerDistance: 20,
@@ -187,8 +179,7 @@ const MapboxDrawPolygon = ({map, style, styleKey, disable, geojson, onChange, co
         })
         drawInstanceRef.current = draw
         draw.on("ready", () => {
-            console.log("[Draw Polygon] Draw polygon ready")
-            waitAnimated(() => {
+            _.waited(() => {
                 isUpdatingInternally.current = false
                 isInitialized.current = true
                 setIsDrawReady(true)
@@ -196,10 +187,10 @@ const MapboxDrawPolygon = ({map, style, styleKey, disable, geojson, onChange, co
         })
 
         draw.start()
-        draw.setMode('render') // 初期は描画モードOFF
+        draw.setMode('render')
         draw.on("change", onDrawChanged)
 
-        console.log("[Draw Polygon] Draw polygon started")
+
 
     }, [map, geojson])
 
@@ -217,27 +208,22 @@ const MapboxDrawPolygon = ({map, style, styleKey, disable, geojson, onChange, co
     }, [styleKey])
 
     useEveListen(EVENT_RESET_DATA, () => {
-        console.log("[DrawPolygon]", "Reset event received", geojson)
+
         const draw = drawInstanceRef.current
         try {
             draw.setMode("render")
             draw.stop()
-            waitAnimated(() => {
+            _.waited(() => {
                 initialDraw()
             }, 30)
-        } catch {}
+        } catch { }
     })
 
     useEffect(() => {
         if (!map || !isDrawReady || isUpdatingInternally.current) { return }
         const draw = drawInstanceRef.current
-        if (!geojson) {
-            console.log("[Draw Polygon] Draw polygon nothing")
-            draw.clear()
-        } else {
-            console.log("[Draw Polygon] Draw polygon called")
-            drawPolygon()
-        }
+        if (!geojson) { draw.clear() }
+        else { drawPolygon() }
     }, [geojson, isDrawReady])
 
     const onDrawChanged = useCallback(_.debounce(() => {
@@ -246,42 +232,40 @@ const MapboxDrawPolygon = ({map, style, styleKey, disable, geojson, onChange, co
         const draw = drawInstanceRef.current
 
         const features = draw.getSnapshot().filter(feature => {
-            // Point や closingPoint を除外
+
             if (feature.geometry.type === "Point") return false
             if (feature.properties?.closingPoint) return false
             return true
         })
 
-        console.log("[DrawPolygon]", "描画変更", features.length)
-
         if (features.length === 0) {
-            onChange?.({geojson: null})
+            onChange?.({ geojson: null })
             return
         }
 
         const multiPolygon = {
             type: "MultiPolygon",
-            coordinates: features.map(({geometry}) => geometry.coordinates),
+            coordinates: features.map(({ geometry }) => geometry.coordinates),
         }
 
         isUpdatingInternally.current = true
         let isClosingRing = true
-        for(const polygon of multiPolygon.coordinates) {
+        for (const polygon of multiPolygon.coordinates) {
             for (const coords of polygon) {
                 if (!_.isEqual(_.first(coords), _.last(coords))) {
                     isClosingRing = false
                 }
             }
         }
-        console.log("[Drawing]", "polygon close ring all", isClosingRing)
-        onChange?.({geojson: multiPolygon})
 
-        waitAnimated(() => {
+        onChange?.({ geojson: multiPolygon })
+
+        _.waited(() => {
             isUpdatingInternally.current = false
         }, 10)
     }, 300), [])
 
-    // // 描画モードの切り替え
+
     useEffect(() => {
         if (!drawInstanceRef.current) return
 
@@ -289,26 +273,26 @@ const MapboxDrawPolygon = ({map, style, styleKey, disable, geojson, onChange, co
 
         switch (drawMode) {
             case DrawMode.Drawing:
-                console.log("[DrawPolygon]", "モード切り替え: polygon")
+
                 draw.setMode('polygon')
                 break
             case DrawMode.Selecting:
-                console.log("[DrawPolygon]", "モード切り替え: select")
+
                 draw.setMode('select')
                 break
             case DrawMode.Removing:
-                console.log("[DrawPolygon]", "モード切り替え: render (削除モード)")
+
                 draw.setMode('render')
                 break
             default:
-                console.log("[DrawPolygon]", "モード切り替え: render")
+
                 draw.setMode('render')
         }
     }, [drawMode])
 
     const handleDrawModeClick = (mode) => {
         if (drawMode === mode) {
-            // 同じモードをクリックしたらOFFにする
+
             setDrawMode(null)
         } else {
             setDrawMode(mode)
@@ -316,7 +300,7 @@ const MapboxDrawPolygon = ({map, style, styleKey, disable, geojson, onChange, co
     }
 
     return (
-        <Box {...controlProps} sx={{...styles.box, ...controlProps?.sx}}>
+        <Box {...controlProps} sx={{ ...styles.box, ...controlProps?.sx }}>
             <Tooltip title="図形を描画します">
                 <IconButton
                     disabled={disable || !map}

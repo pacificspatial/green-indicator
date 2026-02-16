@@ -1,7 +1,7 @@
-import {useEffect, useMemo} from "react"
+import { useEffect, useMemo } from "react"
 import _ from "ansuko"
-import {Box, Divider, Typography} from "@mui/material"
-import {toNumber} from "@_manager/util"
+import { Box, Divider, Typography } from "@mui/material"
+import { toNumber } from "@_manager/util"
 
 const styles = {
     root: {
@@ -35,7 +35,7 @@ const styles = {
     },
 }
 
-const ProjectCalcedView = ({data, onChange}) => {
+const ProjectCalcedView = ({ data, onChange }) => {
 
     const calcedGreenArea = useMemo(() => {
 
@@ -59,10 +59,6 @@ const ProjectCalcedView = ({data, onChange}) => {
         calcedGreenArea,
         data?.site_area
     ])
-
-    useEffect(() => {
-        console.log("[ProjectCalced]", calcedGreenArea, calcedGreenRate, data)
-    }, [calcedGreenArea, calcedGreenRate, data])
 
     return (
         <Box sx={styles.root}>

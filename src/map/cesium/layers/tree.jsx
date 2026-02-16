@@ -6,10 +6,6 @@ const CesiumTreeLayer = ({viewer, enable}) => {
 
     const tileset = useRef()
 
-    const setColor = useCallback(() => {
-        console.log(tileset.current.entities)
-    }, [])
-
     useEffect(() => {
         if (!viewer?.scene || tileset.current || !enable) {
             return
@@ -22,8 +18,6 @@ const CesiumTreeLayer = ({viewer, enable}) => {
             .then(ts => {
                 tileset.current = ts
                 viewer?.scene?.primitives.add(ts)
-
-                setColor()
             })
 
         return () => {

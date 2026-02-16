@@ -65,7 +65,6 @@ const MapTokyoTreeLayer = ({map, filter, visible, style, onClick, onInit}) => {
     }, 100), [appState.user, cacheBuster, appState.env])
 
     const initLayer = useCallback(() => {
-        console.log("[Tree]", "init layer", map, url)
         if (!map || !url) { return }
 
         addVectorSource(map, SourceName, url, OverwriteMode.Rewrite)
@@ -133,7 +132,6 @@ const MapTokyoTreeLayer = ({map, filter, visible, style, onClick, onInit}) => {
     }, [map, visible])
 
     const updateFilter = useCallback(() => {
-        console.log("[TreeLayer]", "update filter", filter)
         setFilter(map, LayerName, filter)
     }, [map, filter])
 

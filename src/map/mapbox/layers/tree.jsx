@@ -1,21 +1,20 @@
 import PropTypes from "prop-types"
-import {useCallback, useContext, useEffect, useState} from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import _ from "ansuko"
 import dayjs from "dayjs"
-import {standardLayerProps} from "./common"
+import { standardLayerProps } from "./common"
 import { UseApiManager, AppDataContext, useMaplibre, OverwriteMode } from "@team4am/fp-core"
 
 const SourceName = "tree"
 
 export const LayerName = {
-    Circle: {id: "tree-circle-layer", at: 2},
-    Buffer: {id: "tree-buffer-layer", at: 1},
+    Circle: { id: "tree-circle-layer", at: 2 },
+    Buffer: { id: "tree-buffer-layer", at: 1 },
 }
 
-const MapTreeLayer = ({map, filter, visible, style, onInit}) => {
+const MapTreeLayer = ({ map, filter, visible, style, onInit }) => {
 
     const { state: appState } = useContext(AppDataContext)
-//    const evn = useEve()
     const [url, setUrl] = useState()
     const [cacheBuster, setCacheBuster] = useState(dayjs().unix())
     const { QueryVectorTileUrl } = UseApiManager()
@@ -33,7 +32,6 @@ const MapTreeLayer = ({map, filter, visible, style, onInit}) => {
     }, [map, visible])
 
     const updateFilter = useCallback(() => {
-        console.log("[TreeLayer]", "update filter", filter)
         setFilter(map, LayerName, filter)
     }, [map, filter])
 
@@ -47,7 +45,6 @@ const MapTreeLayer = ({map, filter, visible, style, onInit}) => {
     }, 100), [appState.user, cacheBuster, appState.env])
 
     const initLayer = useCallback(() => {
-        console.log("[Tree]", "init layer", map, url)
         if (!map || !url) { return }
 
         addVectorSource(map, SourceName, url, OverwriteMode.Rewrite)
@@ -59,9 +56,9 @@ const MapTreeLayer = ({map, filter, visible, style, onInit}) => {
             paint: {
                 circleColor: '#539e3e',
                 circleOpacity: 0.5,
-                circleRadius: zoomInterpolate({8:1,10:3,14:5,18:11}),
+                circleRadius: zoomInterpolate({ 8: 1, 10: 3, 14: 5, 18: 11 }),
                 circleStrokeColor: "#ffffff",
-                circleStrokeWidth: zoomInterpolate({8:0,10:0.1,14:0.5,18:1}),
+                circleStrokeWidth: zoomInterpolate({ 8: 0, 10: 0.1, 14: 0.5, 18: 1 }),
             }
         }, OverwriteMode.Rewrite)
         addLayer(map, {
@@ -72,11 +69,9 @@ const MapTreeLayer = ({map, filter, visible, style, onInit}) => {
             paint: {
                 circleColor: "#ffffff",
                 circleOpacity: 0.01,
-                circleRadius: zoomInterpolate({8:1,10:8,14:10,18:16}),
+                circleRadius: zoomInterpolate({ 8: 1, 10: 8, 14: 10, 18: 16 }),
             }
         }, OverwriteMode.Rewrite)
-
-//        addClickEvent(map, LayerName, onLayerClick)
 
         updateVisible()
         updateFilter()
@@ -96,7 +91,7 @@ const MapTreeLayer = ({map, filter, visible, style, onInit}) => {
 
         return () => {
             clearTimeout(tm)
-            removes(map,{sources: SourceName, layers: LayerName})
+            removes(map, { sources: SourceName, layers: LayerName })
         }
 
     }, [map, url, style])

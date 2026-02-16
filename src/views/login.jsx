@@ -63,7 +63,7 @@ const LoginView = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then(() => setLoading(false))
             .catch(e => {
-                console.log(e.value)
+                console.error(e.value)
             })
             .finally(() => setLoading(false))
     }, [email, password])

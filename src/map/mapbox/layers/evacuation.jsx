@@ -13,7 +13,6 @@ export const LayerName = {
 const MapEvacuationLayer = ({map, visible, style, onInit}) => {
 
     const { state: appState } = useContext(AppDataContext)
-//    const evn = useEve()
     const [url, setUrl] = useState()
     const [cacheBuster, setCacheBuster] = useState(dayjs().unix())
     const { QueryVectorTileUrl } = UseApiManager()
@@ -39,7 +38,6 @@ const MapEvacuationLayer = ({map, visible, style, onInit}) => {
     }, 100), [appState.user, cacheBuster, appState.env])
 
     const initLayer = useCallback(() => {
-        console.log("[Tree]", "init layer", map, url)
         if (!map || !url) { return }
 
         addVectorSource(map, SourceName, url, OverwriteMode.Rewrite)
@@ -56,8 +54,6 @@ const MapEvacuationLayer = ({map, visible, style, onInit}) => {
                 circleStrokeWidth: zoomInterpolate({8:0,10:0.1,14:0.5,18:1}),
             }
         }, OverwriteMode.Rewrite)
-
-//        addClickEvent(map, LayerName, onLayerClick)
 
         updateVisible()
 
@@ -80,8 +76,6 @@ const MapEvacuationLayer = ({map, visible, style, onInit}) => {
         }
 
     }, [map, url, style])
-
-
 
     useEffect(() => {
         updateVisible()

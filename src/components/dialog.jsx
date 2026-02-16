@@ -1,4 +1,4 @@
-import React, {useReducer, createContext, useContext, useCallback} from 'react';
+import React, { useReducer, createContext, useContext, useCallback } from 'react';
 import {
     Dialog,
     DialogTitle,
@@ -100,7 +100,6 @@ const DialogReducer = (state, action) => {
     }
 };
 
-// Context作成
 const DialogContext = createContext();
 
 const styles = {
@@ -128,7 +127,7 @@ const styles = {
         input: {},
     },
     actions: {
-        button: {minWidth: "100px", borderRadius: "16px",},
+        button: { minWidth: "100px", borderRadius: "16px", },
         cancel: {
             background: cancelButtonGradient,
             '&:hover': {
@@ -144,11 +143,8 @@ const styles = {
     }
 }
 
-// DialogProvider コンポーネント
 export const DialogProvider = ({ children }) => {
     const [state, dispatch] = useReducer(DialogReducer, initialState);
-
-    // ダイアログを開く関数群
     const openConfirm = useCallback((message, options) => {
         dispatch({
             type: ActionType.SetConfirm,
@@ -195,11 +191,10 @@ export const DialogProvider = ({ children }) => {
         dispatch({ type: ActionType.Close })
     }, [])
 
-    // ボタンハンドラー
     const handleConfirm = useCallback(() => {
         let f = null
-        if  (state.onConfirm) {
-            if (state.type === "input"){
+        if (state.onConfirm) {
+            if (state.type === "input") {
                 f = state.onConfirm(state.inputValue)
             } else {
                 f = state.onConfirm()
@@ -272,7 +267,7 @@ export const DialogProvider = ({ children }) => {
                             state.message :
                             (
                                 <Box style={styles.content.textBox}>
-                                    <Typography style={{...styles.content.text, whiteSpace: "pre-line"}}>{String(state.message)}</Typography>
+                                    <Typography style={{ ...styles.content.text, whiteSpace: "pre-line" }}>{String(state.message)}</Typography>
                                 </Box>
                             )
                     )}
@@ -294,8 +289,8 @@ export const DialogProvider = ({ children }) => {
                 <DialogActions sx={styles.actions.box}>
                     {state.type === 'confirm' && (
                         <>
-                            <Button sx={{...styles.actions.button, ...styles.actions.cancel}} onClick={handleCancel} variant="contained">いいえ</Button>
-                            <Button sx={{...styles.actions.button, ...styles.actions.ok}} onClick={handleConfirm} variant="contained">
+                            <Button sx={{ ...styles.actions.button, ...styles.actions.cancel }} onClick={handleCancel} variant="contained">いいえ</Button>
+                            <Button sx={{ ...styles.actions.button, ...styles.actions.ok }} onClick={handleConfirm} variant="contained">
                                 はい
                             </Button>
                         </>
@@ -303,23 +298,23 @@ export const DialogProvider = ({ children }) => {
 
                     {state.type === 'modal' && (
                         <>
-                            <Button sx={{...styles.actions.button, ...styles.actions.cancel}} onClick={handleCancel} variant="contained">Cancel</Button>
-                            <Button sx={{...styles.actions.button, ...styles.actions.ok}} onClick={handleConfirm} variant="contained">
+                            <Button sx={{ ...styles.actions.button, ...styles.actions.cancel }} onClick={handleCancel} variant="contained">Cancel</Button>
+                            <Button sx={{ ...styles.actions.button, ...styles.actions.ok }} onClick={handleConfirm} variant="contained">
                                 OK
                             </Button>
                         </>
                     )}
 
                     {state.type === 'alert' && (
-                        <Button sx={{...styles.actions.button, ...styles.actions.ok}} onClick={handleConfirm} variant="contained">
+                        <Button sx={{ ...styles.actions.button, ...styles.actions.ok }} onClick={handleConfirm} variant="contained">
                             OK
                         </Button>
                     )}
 
                     {state.type === 'input' && (
                         <>
-                            <Button sx={{...styles.actions.button, ...styles.actions.cancel}} onClick={handleCancel} variant="contained">キャンセル</Button>
-                            <Button sx={{...styles.actions.button, ...styles.actions.ok}} onClick={handleConfirm} variant="contained">
+                            <Button sx={{ ...styles.actions.button, ...styles.actions.cancel }} onClick={handleCancel} variant="contained">キャンセル</Button>
+                            <Button sx={{ ...styles.actions.button, ...styles.actions.ok }} onClick={handleConfirm} variant="contained">
                                 OK
                             </Button>
                         </>
@@ -333,8 +328,6 @@ DialogProvider.propTypes = {
     children: PropTypes.node.isRequired,
 }
 
-// カスタムフック
-// eslint-disable-next-line react-refresh/only-export-components
 export const useDialog = () => {
     const context = useContext(DialogContext);
     if (!context) {

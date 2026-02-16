@@ -1,13 +1,13 @@
-import { Box, CircularProgress, Typography,FormControlLabel, Checkbox ,Button } from '@mui/material'
-import {useCallback, useContext, useEffect, useMemo, useState} from "react"
+import { Box, CircularProgress, Typography, FormControlLabel, Checkbox, Button } from '@mui/material'
+import { useCallback, useContext, useEffect, useMemo, useState } from "react"
 import _ from "ansuko"
-import {useDialog} from "@_components/dialog"
-import {getAuth} from "firebase/auth"
-import {AUTH_DISABLE_CODE_LOCAL_STORAGE_KEY} from "../App"
+import { useDialog } from "@_components/dialog"
+import { getAuth } from "firebase/auth"
+import { AUTH_DISABLE_CODE_LOCAL_STORAGE_KEY } from "../App"
 import { UseApiManager, AppDataContext } from "@team4am/fp-core"
 
 const styles = {
-    root:{
+    root: {
         width: '100%',
         height: '100%',
         display: 'flex',
@@ -27,8 +27,8 @@ const styles = {
         fontSize: '23px',
         fontWeight: 'bold',
     },
-    digits:{
-        root:{
+    digits: {
+        root: {
             display: 'flex',
             flexDirection: 'row',
             gap: '16px'
@@ -64,26 +64,25 @@ const AuthView = () => {
 
     const lastIndex = useMemo(() => 5 - 1, [])
 
-    const { state : appState, setUser } = useContext(AppDataContext)
+    const { state: appState, setUser } = useContext(AppDataContext)
     const [code, setCode] = useState(Array(digits).fill(""))
     const [currentIndex, setCurrentIndex] = useState(0)
     const [errorMessage, setErrorMessage] = useState(null)
-    const { PostOne,GetOne } = UseApiManager()
+    const { PostOne, GetOne } = UseApiManager()
     const { openAlert } = useDialog()
-    const [loading,setLoading] = useState(false)
+    const [loading, setLoading] = useState(false)
     const [noCode, setNoCode] = useState(false)
     const mail = useMemo(() => {
-        if (!appState.user?.email) { return "不明"}
-        const val =appState.user.email.split('@')
-        return [val[0].slice(0, 3) + '***', val[1].slice(0,5) + '***'].join('@')
+        if (!appState.user?.email) { return "不明" }
+        const val = appState.user.email.split('@')
+        return [val[0].slice(0, 3) + '***', val[1].slice(0, 5) + '***'].join('@')
     }, [appState.user?.email])
 
     const checkVerify = useCallback(_.debounce(() => {
-        if (!appState.user) {return}
+        if (!appState.user) { return }
         setLoading(true)
-        PostOne("auth/verify_code", {code: code.join("")})
+        PostOne("auth/verify_code", { code: code.join("") })
             .then(res => {
-                console.log(res)
                 if (res) {
                     if (noCode) {
                         let value
@@ -91,12 +90,12 @@ const AuthView = () => {
                         if (nData) {
                             const val = JSON.parse(nData)
                             value.disabled = [...val.disabled, appState.user.email]
-                        } else{
-                            value = { disabled: [appState.user.email]}
+                        } else {
+                            value = { disabled: [appState.user.email] }
                         }
                         localStorage.setItem(AUTH_DISABLE_CODE_LOCAL_STORAGE_KEY, JSON.stringify(value))
                     }
-                    setUser({..._.cloneDeep(appState.user), require_auth:false})
+                    setUser({ ..._.cloneDeep(appState.user), require_auth: false })
                 }
                 else {
                     setErrorMessage("認証コードが一致していません")
@@ -111,13 +110,13 @@ const AuthView = () => {
                 console.error(e)
             })
             .finally(() => setLoading(false))
-    },100), [code,appState.user, setUser])
+    }, 100), [code, appState.user, setUser])
 
     const reSendSMS = useCallback(() => {
         setLoading(true)
         GetOne("auth/check_verify")
             .then(res => {
-                setUser({..._.cloneDeep(appState.user), require_auth:res})
+                setUser({ ..._.cloneDeep(appState.user), require_auth: res })
             })
             .finally(() => {
                 setLoading(false)
@@ -126,7 +125,6 @@ const AuthView = () => {
 
     const onKeyUp = useCallback(_.debounce(e => {
         if (currentIndex > lastIndex) {
-            console.log("overflow",currentIndex,lastIndex)
             return
         }
         if (e.key >= "0" && e.key <= "9") {
@@ -157,16 +155,14 @@ const AuthView = () => {
                 return
             }
             setCurrentIndex(prev => prev - 1)
-        } else {
-            console.log("無効なキー",e.key)
         }
-    },100),[currentIndex, code])
+    }, 100), [currentIndex, code])
 
     const onLogout = useCallback(() => {
         getAuth().signOut().then(() => window.location.reload())
     }, [])
 
-    const onChangeNoCode = useCallback((e,v) =>{
+    const onChangeNoCode = useCallback((e, v) => {
         setNoCode(v)
     }, [])
 
@@ -179,10 +175,10 @@ const AuthView = () => {
 
     useEffect(() => {
         document.addEventListener("keyup", onKeyUp)
-        return() => {
+        return () => {
             document.removeEventListener("keyup", onKeyUp)
         }
-    },[onKeyUp])
+    }, [onKeyUp])
 
     return (
         <Box style={styles.root} onKeyUp={onKeyUp}>
@@ -190,16 +186,16 @@ const AuthView = () => {
                 <Typography style={styles.label}>SMSに送信された認証コードを入力してください</Typography>
                 <Box style={styles.digits.root}>
                     {code.map((item, index) => (
-                        <Box onClick={() => setCurrentIndex(index)} style={{...styles.digits.box, background: currentIndex === index ? "#eee" :null}} key={`digit-box-${index}`}>
-                            <Typography style={{...styles.digits.input, ...(currentIndex === index ? styles.digits.current: null)}}>{item}</Typography>
+                        <Box onClick={() => setCurrentIndex(index)} style={{ ...styles.digits.box, background: currentIndex === index ? "#eee" : null }} key={`digit-box-${index}`}>
+                            <Typography style={{ ...styles.digits.input, ...(currentIndex === index ? styles.digits.current : null) }}>{item}</Typography>
                         </Box>
                     ))}
                 </Box>
                 <Box>
                     <FormControlLabel control={<Checkbox checked={noCode} onChange={onChangeNoCode} />} label="このブラウザではコードを要求しないでください" />
                 </Box>
-                {!loading ? <Typography style={{color: "#f33"}}>{errorMessage ?? " "}</Typography>: null}
-                {loading ? <CircularProgress />: null}
+                {!loading ? <Typography style={{ color: "#f33" }}>{errorMessage ?? " "}</Typography> : null}
+                {loading ? <CircularProgress /> : null}
                 <Box style={styles.resend.box}>
                     <Button style={styles.resend.button} onClick={reSendSMS}>SMS再送信</Button>
                 </Box>

@@ -1,16 +1,16 @@
-import {useCallback, useContext, useEffect, useState} from "react"
+import { useCallback, useContext, useEffect, useState } from "react"
 import _ from "ansuko"
 import dayjs from "dayjs";
-import {standardLayerProps} from "./common"
+import { standardLayerProps } from "./common"
 import { UseApiManager, AppDataContext, useMaplibre, OverwriteMode } from "@team4am/fp-core"
 
 const SourceName = "sunshine_area"
 
 export const LayerName = {
-    Fill: {id: "sunshine_area-fill-layer", at: 2},
+    Fill: { id: "sunshine_area-fill-layer", at: 2 },
 }
 
-const MapSunshineAreaLayer = ({map, visible, style, onInit}) => {
+const MapSunshineAreaLayer = ({ map, visible, style, onInit }) => {
 
     const { state: appState } = useContext(AppDataContext)
     const [url, setUrl] = useState()
@@ -38,7 +38,6 @@ const MapSunshineAreaLayer = ({map, visible, style, onInit}) => {
     }, 100), [appState.user, cacheBuster, appState.env])
 
     const initLayer = useCallback(() => {
-        console.log("[Tree]", "init layer", map, url)
         if (!map || !url) { return }
 
         addVectorSource(map, SourceName, url, OverwriteMode.Rewrite)
@@ -55,9 +54,6 @@ const MapSunshineAreaLayer = ({map, visible, style, onInit}) => {
                 fillOpacity: 0.5,
             }
         }, OverwriteMode.Rewrite)
-
-//        addClickEvent(map, LayerName, onLayerClick)
-
         updateVisible()
 
         onInit && onInit()
@@ -75,7 +71,7 @@ const MapSunshineAreaLayer = ({map, visible, style, onInit}) => {
 
         return () => {
             clearTimeout(tm)
-            removes(map,{sources: SourceName, layers: LayerName})
+            removes(map, { sources: SourceName, layers: LayerName })
         }
 
     }, [map, url, style])

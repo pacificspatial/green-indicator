@@ -50,10 +50,6 @@ export const SectionLabel = React.memo(({ text, style }) => {
 
     const styles = useMemo(() => deepmerge({}, slStyles, style), [style])
 
-    useEffect(() => {
-        console.log("[SectionLabel]", "styles", styles)
-    }, [styles]);
-
     return (
         <Box sx={{ display: "flex", alignItems: "center", height: "100%" }}>
             <Box style={styles.root}>
@@ -120,7 +116,7 @@ export const NumberTextField = (props) => {
     const edited = useMemo(() => {
         const v = _.toNumber(props.value)
         const c = _.toNumber(props.calced)
-        console.log("[NumberTextField]", "edited check", v, c)
+
         if (!_.isNumber(c) || !_.isNumber(v)) { return false }
         return c !== v
     }, [props.value, props.calced])
@@ -142,9 +138,9 @@ export const NumberTextField = (props) => {
     }, [props.onChange])
 
     useEffect(() => {
-        console.log("[NumberTextField]", "update props.value", props.value)
+
         const newValue = _.toNumber(props.value)
-        console.log("[NumberTextField]", "toNumber result:", newValue)
+
         setValue(newValue)
     }, [props.value])
 
@@ -154,7 +150,7 @@ export const NumberTextField = (props) => {
 
     useEveListen(EVENT_RESET_DATA, () => {
         isUpdateInternally.current = true
-        console.log("[NumberTextField]", "reset value", initValueRef.current, props.value)
+
         setValue(props.value ?? "")
         _.waited(() => {
             isUpdateInternally.current = false

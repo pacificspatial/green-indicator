@@ -134,7 +134,6 @@ const MainViewComponent = () => {
         exportExcel(rows, abortControllerRef.current.signal)
             .catch(e => {
                 if (e.name === "AbortError") {
-                    console.log("[Excel Export] Aborted")
                     return
                 }
                 openAlert(e, { title: "エクスポートエラー" })
@@ -166,7 +165,6 @@ const MainViewComponent = () => {
     }, [])
 
     const onRowClick = useCallback(val => {
-        console.log(val)
         setProject(val.row)
     })
 
@@ -185,7 +183,6 @@ const MainViewComponent = () => {
     useEveListen(DISPATCH_SUBMIT_RESPONSE, loadData)
 
     if (!_.isNil(mainState.project)) {
-        console.log("[Project Check]", mainState.project)
         return (<ProjectView onClose={() => setProject(null)} />)
     }
     

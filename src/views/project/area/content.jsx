@@ -63,7 +63,6 @@ const AreaContent = ({name, data, field, unit, onChange, valueName}) => {
     const editedValue = useMemo(() => {
         const value1 = _.has(data, field) ? _.toNumber(data[field]) : null
         const value2 = _.has(data, `calced_${field}`) ? _.toNumber(data[`calced_${field}`]) : null
-        console.log("[AreaContent]", "check user edited", field, value1, value2)
         if (!value1) { return false }
         if (!value2) { return false }
         return value1 !== value2

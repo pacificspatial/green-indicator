@@ -22,7 +22,6 @@ const ProjectSummaryAreaView = ({ data, onChange }) => {
     const { PostOne, PostFirst } = UseApiManager()
 
     useEffect(() => {
-        console.log("[Project]", "area", "polygon", data?.geojson)
         if (!data?.geojson) {
             onChange({
                 calced_site_area: null,
@@ -41,7 +40,6 @@ const ProjectSummaryAreaView = ({ data, onChange }) => {
             PostFirst("green_infra/nearest_evaluation", { geojson: data.geojson }),
         ]).then(([calced_co2_absorption, calced_sunshine_area, evaluation]) => {
             const calced_evaluation_distance = evaluation?.length
-            console.log("Load area data", calced_site_area, calced_co2_absorption, calced_sunshine_area, calced_evaluation_distance, onChange)
             onChange({
                 calced_site_area: Math.round(calced_site_area),
                 calced_co2_absorption: Math.round(calced_co2_absorption * 1000) / 1000,

@@ -42,10 +42,6 @@ const ProjectSummaryCesiumMapView = ({data, onChange, onPolygon}) => {
         (data?.longitude && data?.latitude) ? Cesium.Cartesian3.fromDegrees(_.toNumber(data.longitude), _.toNumber(data.latitude), 600.0): null
         , [data?.longitude, data?.latitude])
 
-    const onFeatureClick = useCallback(() => {
-        console.log("Feature clicked")
-    }, [])
-
     const {viewer} = useCesium({
         mapRef,
         basemapDef,

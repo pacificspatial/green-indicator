@@ -1,7 +1,6 @@
 import _ from "ansuko"
 import {AsYouType, parsePhoneNumber} from "libphonenumber-js"
 
-
 export const waitAnimated = (func, frameCount = 0) => {
     requestAnimationFrame(() => {
         if (frameCount > 0) { return waitAnimated(func, frameCount - 1) }
@@ -11,7 +10,6 @@ export const waitAnimated = (func, frameCount = 0) => {
 
 const toHalfWidth = value => String(value).split('').map(char => {
     const code = char.charCodeAt(0);
-    // 全角は0xFF01～0xFF5E、半角は0x0021～0x007E
     if (code >= 0xFF01 && code <= 0xFF5E) {
         return String.fromCharCode(code - 0xFEE0);
     }
@@ -49,11 +47,6 @@ export const boolIf = (value, defaultValue = false) => {
 
 const AsYouTypeJp = new AsYouType("JP")
 
-/**
- * 電話番号を0x0-xxxx-xxxx形式に変換
- * @param phoneNumber {string}
- * @returns {string}
- */
 export const phoneNumberToJP = (phoneNumber) => phoneNumber ?
     (new AsYouType("JP").input(phoneNumber)
             .replace("+81 ", "0")
@@ -61,11 +54,6 @@ export const phoneNumberToJP = (phoneNumber) => phoneNumber ?
             .replace(" ", "-")
     ) : null
 
-/**
- * 電話番号を+81xxxx表記にへんかｎ
- * @param phoneNumber {string}
- * @returns {string}
- */
 export const phoneNumberToITN = (phoneNumber) => phoneNumber ?
     parsePhoneNumber(phoneNumber, "JP").number : null
 

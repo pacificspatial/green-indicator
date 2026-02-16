@@ -120,7 +120,6 @@ const ProjectView = () => {
 
     const onSave = useCallback(() => {
         setLoading(true)
-        console.log("[Project]", "on save", data, edited)
         abortControllerRef.current?.abort()
         abortControllerRef.current = new AbortController()
 
@@ -166,7 +165,6 @@ const ProjectView = () => {
     }, [])
 
     const _onChange = useCallback(val => {
-        console.log("[Project]", "new data", val)
         setData(prev => ({...prev, ...val}))
     }, [])
 
@@ -188,7 +186,6 @@ const ProjectView = () => {
                         }
                     })
                 }).catch(e => {
-                    console.log(e.code)
                     if (e.code === "ERR_CANCELED") {
                         openAlert("キャンセルしました")
                     } else {

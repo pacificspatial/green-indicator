@@ -35,10 +35,9 @@ if (_.size(getApps()) === 0) {
     })
 }
 
-// ライトテーマを作成
 const lightTheme = createTheme({
     palette: {
-        mode: 'light', // これが重要！
+        mode: 'light',
     },
 });
 
