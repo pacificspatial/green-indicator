@@ -225,20 +225,10 @@
     },
     {
       "type": "Resource",
-      "source_relative_path": "resources/index1.png",
+      "source_relative_path": "resources/green_indicator001.png",
       "output": {
         "resource": {
-          "relative_path": "resources/index1.png"
-        }
-      },
-      "version": ""
-    },
-    {
-      "type": "Resource",
-      "source_relative_path": "resources/index2.png",
-      "output": {
-        "resource": {
-          "relative_path": "resources/index2.png"
+          "relative_path": "resources/green_indicator001.png"
         }
       },
       "version": ""
