@@ -6,9 +6,7 @@
 
 本システムの構成や仕様の詳細については以下も参考にしてください。
 
-- [技術検証レポート](https://www.mlit.go.jp/plateau/file/libraries/doc/*****)
-- [PLATEAU Use case「樹木データを活用した温熱環境シミュレータの開発」](https://www.mlit.go.jp/plateau/use-case/uc24-17/)
-- [利用チュートリアル](https://project-plateau.github.io/green-dashboard)
+- [技術検証レポート](https://www.mlit.go.jp/plateau/file/libraries/doc/plateau_tech_doc_0136_ver01.pdf)
 
 # 2 動作環境
 
@@ -37,7 +35,7 @@
 | オープンソースライブラリ | [CesiumJS](https://github.com/CesiumGS/cesium) | 1.115 | 3Dビューア用ライブラリ |
 | 商用ライブラリ | [AG Grid](https://ag-grid.com/) | 31.1.1 | テーブル表示・集計ライブラリ |
 | クラウドサービス | [Firebase](https://firebase.google.com/) | - | 認証機能（Firebase Authentication）を提供 |
-| 商用ソフトウェア | [FME Form](https://safe.com/) | 2025.x | データ変換・投入処理 |
+| 商用ソフトウェア | [FME Form](https://safe.com/) | 2025.x | データ変換 |
 | 商用クラウド | [Cesium ion](https://cesium.com/platform/cesium-ion/) | - | 3Dデータの変換と配信サービス |
 
 # 3 事前準備
@@ -89,9 +87,6 @@ npm -v
 1. Cesium ion にサインインし、3D都市モデルデータ（建物・樹木等）をアップロードします。
 2. タイル変換処理が完了したら、アセットIDとアクセストークンを控えます。
 
-## （6）FME Form の準備
-
-[FME Form](https://safe.com/) を使用してデータ変換・投入処理を実施します。FME Form は商用ソフトウェアです。業務目的で利用するには、ライセンスの購入が必要です。新規ライセンスの購入については、Pacific Spatial Solutions 株式会社（Safe Software の公式パートナー）にお問い合わせください。
 
 # 4 インストール手順
 
