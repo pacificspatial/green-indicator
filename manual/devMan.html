@@ -82,7 +82,7 @@
 <h1 id="1-本書について">1 本書について</h1>
 <p>本書では、「緑の評価指標機能」は優良緑地確保計画認定制度(TSUNAG)など国の制度との連携を想定し、緑化の評価指標を算出し、指定したエリア内での緑地面積の自動算出機能や日陰シミュレーションの可視化、登録された緑地データに基づくCO₂吸収量の算出機能などを提供します。</p>
 <p>本システムは、3D都市モデルを活用した樹木管理機能及び緑の効果の定量的評価を支援する取り組みである「樹木データを活用した温熱環境シミュレータの開発」の一部として開発されたWebアプリケーションです。</p>
-<p>本システムの構成や仕様の詳細については以下も参考にしてください。</p>
+<p>本システムの構成や仕様の詳細については以下も参考にしてください.</p>
 <ul>
 <li><a href="https://www.mlit.go.jp/plateau/file/libraries/doc/plateau_tech_doc_0136_ver01.pdf">技術検証レポート</a></li>
 </ul>
@@ -192,364 +192,50 @@
 </table>
 <h1 id="3-事前準備">3 事前準備</h1>
 <p>本システムで利用する下記のソフトウェア・サービスを準備します。</p>
-<h2 id="1データベースの準備">（1）データベースの準備</h2>
-<p><a href="https://github.com/postgres/postgres">PostgreSQL</a> を使ってPostgreSQLサーバを起動します。その上で、位置情報を扱うための拡張機能である <a href="https://github.com/postgis/postgis">PostGIS</a> をインストールします。</p>
-<pre><code class="lang-sql">-- PostGIS の有効化
-CREATE EXTENSION IF NOT EXISTS postgis;
-</code></pre>
-<h2 id="2webサーバの準備">（2）Webサーバの準備</h2>
-<p><a href="https://httpd.apache.org/">Apache HTTP Server</a> を使ってWebサーバを起動します。ビルド済みのフロントエンド資材を配信するためのドキュメントルートを設定してください。</p>
-<h2 id="3nodejs-の準備">（3）Node.js の準備</h2>
-<p>フロントエンドのビルドには Node.js が必要です。<a href="https://nodejs.org/">Node.js 公式サイト</a>より、LTS版（v20以上）をインストールしてください。</p>
-<pre><code class="lang-bash"># バージョン確認
-node -v   # v20.x.x 以上であることを確認
-npm -v
-</code></pre>
-<h2 id="4firebase-プロジェクトの準備">（4）Firebase プロジェクトの準備</h2>
-<ol>
-<li><a href="https://console.firebase.google.com/">Firebase コンソール</a>で新規プロジェクトを作成します。</li>
-<li><strong>Authentication</strong> を有効化し、<strong>メール/パスワード</strong> 認証プロバイダを有効にします。</li>
-<li>プロジェクトの設定画面から以下の値を控えます。</li>
-</ol>
-<table>
-<thead>
-<tr>
-<th>環境変数名</th>
-<th>説明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>VITE_FIREBASE_API_KEY</code></td>
-<td>Firebase API キー</td>
-</tr>
-<tr>
-<td><code>VITE_FIREBASE_AUTH_DOMAIN</code></td>
-<td>Firebase Auth ドメイン</td>
-</tr>
-<tr>
-<td><code>VITE_FIREBASE_PROJECT_ID</code></td>
-<td>Firebase プロジェクト ID</td>
-</tr>
-<tr>
-<td><code>VITE_FIREBASE_STORAGE_BUCKET</code></td>
-<td>Firebase Storage バケット</td>
-</tr>
-<tr>
-<td><code>VITE_FIREBASE_APP_ID</code></td>
-<td>Firebase アプリ ID</td>
-</tr>
-<tr>
-<td><code>VITE_FIREBASE_MEASUREMENT_ID</code></td>
-<td>Firebase 計測 ID</td>
-</tr>
-</tbody>
-</table>
+<p>（1）データベースの準備</p>
+<p><a href="https://github.com/postgres/postgres">こちら</a>を利用してPostgreSQLサーバを起動します。その上で、位置情報を扱うための拡張機能である <a href="https://github.com/postgis/postgis">PostGIS</a> をインストールします。</p>
+<p>（2）Webサーバの準備</p>
+<p><a href="https://httpd.apache.org/">こちら</a>を利用してWebサーバを起動します。ビルド済みのフロントエンド資材を配信するためのドキュメントルートを設定してください。</p>
+<p>（3）Node.js の準備</p>
+<p><a href="https://nodejs.org/">こちら</a>からNode.js LTS版（v20以上）をインストールします。フロントエンドのビルドに使用します。</p>
+<p>（4）Firebase プロジェクトの準備</p>
+<p><a href="https://console.firebase.google.com/">Firebase コンソール</a>で新規プロジェクトを作成します。Authentication を有効化し、メール/パスワード認証プロバイダを有効にします。プロジェクトの設定画面から API キーや Auth ドメインなどの接続情報を控えてください。</p>
 <h1 id="4-インストール手順">4 インストール手順</h1>
-<h2 id="1リポジトリの取得">（1）リポジトリの取得</h2>
-<p><a href="https://github.com/Project-PLATEAU/green-indicator">こちら</a> から緑の評価指標機能のソースコードをクローンします。</p>
-<pre><code class="lang-bash">git clone https://github.com/Project-PLATEAU/green-indicator.git
-cd green-indicator
-</code></pre>
-<h2 id="2環境変数の設定">（2）環境変数の設定</h2>
+<p>（1）リポジトリの取得</p>
+<p><a href="https://github.com/Project-PLATEAU/green-indicator">こちら</a>から緑の評価指標機能のソースコードをダウンロードします。</p>
+<p>（2）環境変数の設定</p>
 <p>プロジェクトルート直下に <code>.env</code> ファイルを作成し、以下の環境変数を設定します。</p>
-<pre><code class="lang-dotenv"># バックエンドAPIのエンドポイント
-VITE_API_ENDPOINT=https://&lt;サーバのホスト名またはIPアドレス&gt;/api
-
-# Firebase 認証情報（3事前準備（4）で控えた値を設定）
-VITE_FIREBASE_API_KEY=&lt;FirebaseのapiKey&gt;
-VITE_FIREBASE_AUTH_DOMAIN=&lt;FirebaseのauthDomain&gt;
-VITE_FIREBASE_PROJECT_ID=&lt;FirebaseのprojectId&gt;
-VITE_FIREBASE_STORAGE_BUCKET=&lt;FirebaseのstorageBucket&gt;
-VITE_FIREBASE_APP_ID=&lt;FirebaseのappId&gt;
-VITE_FIREBASE_MEASUREMENT_ID=&lt;FirebaseのmeasurementId&gt;
-
-# Cesium ion アクセストークン（3事前準備（5）で控えた値を設定）
+<pre><code>VITE_API_ENDPOINT=&lt;バックエンドAPIのエンドポイント&gt;
+VITE_FIREBASE_API_KEY=&lt;FirebaseのAPIキー&gt;
+VITE_FIREBASE_AUTH_DOMAIN=&lt;FirebaseのAuthドメイン&gt;
+VITE_FIREBASE_PROJECT_ID=&lt;FirebaseのプロジェクトID&gt;
+VITE_FIREBASE_STORAGE_BUCKET=&lt;FirebaseのStorageバケット&gt;
+VITE_FIREBASE_APP_ID=&lt;FirebaseのアプリID&gt;
+VITE_FIREBASE_MEASUREMENT_ID=&lt;Firebaseの計測ID&gt;
 VITE_CESIUM_ION_TOKEN=&lt;Cesium ionのアクセストークン&gt;
-
-# Cesium ion アセットID（建物・樹木等の3DTilesアセットID）
 VITE_CESIUM_ASSET_ID=&lt;アセットID&gt;
-
-# データ暗号化キー（任意。設定するとローカルストレージのデータを暗号化）
-# VITE_ENCRYPTION_KEY=&lt;任意の文字列&gt;
 </code></pre>
-<h2 id="3依存ライブラリのインストール">（3）依存ライブラリのインストール</h2>
+<p><code>.env</code> ファイルは <code>.gitignore</code> で管理対象外となっています。誤ってGitにコミットしないよう注意してください。</p>
+<p>（3）依存ライブラリのインストールとビルド</p>
+<p>依存パッケージをインストールし、本番用ビルドを実行します。</p>
 <pre><code class="lang-bash">npm install
-</code></pre>
-<h2 id="4ビルド本番環境">（4）ビルド（本番環境）</h2>
-<pre><code class="lang-bash">npm run build
+npm run build
 </code></pre>
 <p>ビルド成果物は <code>dist</code> ディレクトリに出力されます。</p>
-<h2 id="5webサーバへの配置">（5）Webサーバへの配置</h2>
-<p><code>dist</code> ディレクトリの内容を、3（2）で準備したWebサーバのドキュメントルートに配置します。</p>
-<pre><code class="lang-bash"># 例：Apache のドキュメントルートへコピー
-cp -r dist/* /var/www/html/
-</code></pre>
-<p>SPA（シングルページアプリケーション）のため、すべてのリクエストを <code>index.html</code> にフォールバックするよう Apache の設定を行います。</p>
-<pre><code class="lang-apache">&lt;Directory /var/www/html&gt;
-    Options -Indexes
-    AllowOverride All
-&lt;/Directory&gt;
-</code></pre>
-<p><code>.htaccess</code> をドキュメントルートに配置します。</p>
-<pre><code class="lang-apache">&lt;IfModule mod_rewrite.c&gt;
-    RewriteEngine On
-    RewriteBase /
-    RewriteRule ^index\.html$ - [L]
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule . /index.html [L]
-&lt;/IfModule&gt;
-</code></pre>
-<h2 id="6開発サーバの起動開発時のみ">（6）開発サーバの起動（開発時のみ）</h2>
-<p>本番環境へのデプロイではなく、ローカル開発環境での動作確認を行う場合は以下のコマンドを実行します。</p>
-<pre><code class="lang-bash">npm run dev
-</code></pre>
-<p>デフォルトでは <code>http://localhost:5173</code> でアプリケーションが起動します。</p>
+<p>（4）Webサーバへの配置</p>
+<p><code>dist</code> ディレクトリの内容を、3（2）で準備したWebサーバのドキュメントルートに配置します。SPAのため、すべてのリクエストを <code>index.html</code> にフォールバックするよう <code>.htaccess</code> を設定してください。</p>
 <h1 id="5-バックエンドapiの構築">5 バックエンドAPIの構築</h1>
-<p>本システムのフロントエンドは、バックエンドAPIと連携して動作します。バックエンドAPIはPostgreSQLデータベースに接続し、樹木台帳データ、プロジェクト情報、緑の評価指標データ等を提供します。</p>
-<h2 id="1データベースの作成">（1）データベースの作成</h2>
-<p>PostgreSQLに接続し、本システム用のデータベースを作成します。</p>
-<pre><code class="lang-sql">CREATE DATABASE green_indicator ENCODING 'UTF8';
-\c green_indicator
-CREATE EXTENSION IF NOT EXISTS postgis;
-</code></pre>
-<h2 id="2テーブルの作成">（2）テーブルの作成</h2>
-<p>樹木台帳の主要なデータ項目は以下のとおりです。バックエンドAPIの実装に合わせてテーブルを作成してください。</p>
-<table>
-<thead>
-<tr>
-<th>属性項目</th>
-<th>フィールド名</th>
-<th>データ型</th>
-<th>備考</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>内部ID</td>
-<td>id</td>
-<td>integer</td>
-<td>主キー</td>
-</tr>
-<tr>
-<td>樹木UID</td>
-<td>uid</td>
-<td>text</td>
-<td>ユニーク識別子</td>
-</tr>
-<tr>
-<td>樹木ID</td>
-<td>tree_id</td>
-<td>text</td>
-<td>管理番号</td>
-</tr>
-<tr>
-<td>路線樹木番号</td>
-<td>route_treenumber</td>
-<td>text</td>
-<td></td>
-</tr>
-<tr>
-<td>座標（位置情報）</td>
-<td>the_geom</td>
-<td>geometry(Point, 4326)</td>
-<td>PostGIS</td>
-</tr>
-<tr>
-<td>樹木タイプ</td>
-<td>type</td>
-<td>text</td>
-<td>高木 / 中木 など</td>
-</tr>
-<tr>
-<td>種名</td>
-<td>name</td>
-<td>text</td>
-<td></td>
-</tr>
-<tr>
-<td>樹高 (m)</td>
-<td>height</td>
-<td>float</td>
-<td></td>
-</tr>
-<tr>
-<td>幅 (m)</td>
-<td>width</td>
-<td>float</td>
-<td></td>
-</tr>
-<tr>
-<td>延長 (m)</td>
-<td>length</td>
-<td>float</td>
-<td></td>
-</tr>
-<tr>
-<td>幹周 (cm)</td>
-<td>circumference</td>
-<td>integer</td>
-<td></td>
-</tr>
-<tr>
-<td>幹周（複数本）</td>
-<td>circumferences</td>
-<td>jsonb</td>
-<td></td>
-</tr>
-<tr>
-<td>写真</td>
-<td>tree_photos</td>
-<td>text[]</td>
-<td>画像ファイルパス</td>
-</tr>
-<tr>
-<td>外観診断</td>
-<td>ases_visual</td>
-<td>text</td>
-<td></td>
-</tr>
-<tr>
-<td>腐朽診断</td>
-<td>ases_decay</td>
-<td>text</td>
-<td></td>
-</tr>
-<tr>
-<td>根鉢診断</td>
-<td>ases_root</td>
-<td>text</td>
-<td></td>
-</tr>
-<tr>
-<td>総合判定</td>
-<td>ases_comp</td>
-<td>text</td>
-<td>A / B1 / B2 / C</td>
-</tr>
-<tr>
-<td>枯れ状態</td>
-<td>is_dead</td>
-<td>boolean</td>
-<td></td>
-</tr>
-<tr>
-<td>要プレート発注</td>
-<td>is_need_plate</td>
-<td>boolean</td>
-<td></td>
-</tr>
-<tr>
-<td>メモ</td>
-<td>memo</td>
-<td>text</td>
-<td></td>
-</tr>
-<tr>
-<td>初回登録日時 (UNIX)</td>
-<td>date_unix</td>
-<td>bigint</td>
-<td></td>
-</tr>
-<tr>
-<td>最終更新日時 (UNIX)</td>
-<td>updated_at_unix</td>
-<td>bigint</td>
-<td></td>
-</tr>
-<tr>
-<td>初回登録ユーザUID</td>
-<td>registered_user_uid</td>
-<td>text</td>
-<td></td>
-</tr>
-<tr>
-<td>初回登録ユーザ名</td>
-<td>registered_user_name</td>
-<td>text</td>
-<td></td>
-</tr>
-<tr>
-<td>最終更新ユーザUID</td>
-<td>updated_user_uid</td>
-<td>text</td>
-<td></td>
-</tr>
-<tr>
-<td>最終更新ユーザ名</td>
-<td>updated_user_name</td>
-<td>text</td>
-<td></td>
-</tr>
-<tr>
-<td>緯度</td>
-<td>latitude</td>
-<td>float</td>
-<td></td>
-</tr>
-<tr>
-<td>経度</td>
-<td>longitude</td>
-<td>float</td>
-<td></td>
-</tr>
-</tbody>
-</table>
+<p>PostgreSQLに接続し、本システム用のデータベースを作成します。PostGIS拡張を有効化した上で、バックエンドAPIの実装に合わせてテーブルを作成してください。</p>
 <h1 id="6-初期データの投入">6 初期データの投入</h1>
 <p>本システムの稼働に必要なデータを投入します。</p>
-<h2 id="1樹木台帳データの登録">（1）樹木台帳データの登録</h2>
+<p>（1）樹木台帳データの登録</p>
 <p>樹木台帳データを PostgreSQL に格納します。</p>
-<h2 id="23d都市モデルデータの登録">（2）3D都市モデルデータの登録</h2>
-<p>3D都市モデル（建物モデル・樹木モデル等）を Amazon S3に格納します。</p>
-<h2 id="3ユーザの登録">（3）ユーザの登録</h2>
-<p>本システムはFirebase Authentication でユーザ認証を行います。初期ユーザの登録はバックエンドAPI のユーザ管理機能、またはFirebase コンソールから実施してください。</p>
-<p>ユーザには以下の権限を付与できます。</p>
-<table>
-<thead>
-<tr>
-<th>権限</th>
-<th>内容</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Web:Read</td>
-<td>Webアプリへのログイン（閲覧のみ）</td>
-</tr>
-<tr>
-<td>Web:Write</td>
-<td>Webアプリへのログイン（編集可能）</td>
-</tr>
-<tr>
-<td>App:Read</td>
-<td>モバイルアプリへのログイン（閲覧のみ）</td>
-</tr>
-<tr>
-<td>App:Write</td>
-<td>モバイルアプリへのログイン（編集可能）</td>
-</tr>
-<tr>
-<td>Data:Export</td>
-<td>データのエクスポート権限</td>
-</tr>
-<tr>
-<td>User:Admin</td>
-<td>ユーザ管理権限</td>
-</tr>
-</tbody>
-</table>
+<p>（2）3D都市モデルデータの登録</p>
+<p>3D都市モデル（建物モデル・樹木モデル等）を Amazon S3 に格納します。</p>
+<p>（3）ユーザの登録</p>
+<p>Firebase コンソールまたはバックエンドAPIのユーザ管理機能から初期ユーザを登録します。ユーザには用途に応じて閲覧・編集・管理などの権限を付与してください。</p>
 <h1 id="7-動作確認">7 動作確認</h1>
-<h2 id="1ブラウザからのアクセス">（1）ブラウザからのアクセス</h2>
-<p>WebサーバのURLにブラウザからアクセスし、ログイン画面が表示されることを確認します。</p>
-<pre><code>https://&lt;サーバのホスト名またはIPアドレス&gt;/
-</code></pre>
-<h2 id="2ログイン確認">（2）ログイン確認</h2>
-<p>6（3）で登録したユーザのメールアドレスとパスワードでログインできることを確認します。</p>
-<h2 id="3地図評価指標の表示確認">（3）地図・評価指標の表示確認</h2>
-<p>ログイン後、地図上に樹木ポイントおよび3D都市モデルが表示され、緑の評価指標（緑被率・気温低減効果等）がリスト・グラフ形式で表示されることを確認します。</p>
-<h2 id="4集計エクスポートの確認">（4）集計・エクスポートの確認</h2>
-<p>絞り込み条件を設定して樹木リストが正しく絞り込まれること、および集計結果を Excel 形式でダウンロードできることを確認します。</p>
+<p>WebサーバのURLにブラウザからアクセスし、ログイン画面が表示されることを確認します。登録したユーザのメールアドレスとパスワードでログインし、地図上に樹木ポイントおよび3D都市モデルが表示され、緑の評価指標がリスト・グラフ形式で表示されることを確認します。また、絞り込み条件を設定して集計結果を Excel 形式でダウンロードできることも確認してください。</p>
 
 </article>
           </div>
