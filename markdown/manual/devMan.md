@@ -36,7 +36,6 @@
 | 商用ライブラリ | [AG Grid](https://ag-grid.com/) | 31.1.1 | テーブル表示・集計ライブラリ |
 | クラウドサービス | [Firebase](https://firebase.google.com/) | - | 認証機能（Firebase Authentication）を提供 |
 | 商用ソフトウェア | [FME Form](https://safe.com/) | 2025.x | データ変換 |
-| 商用クラウド | [Cesium ion](https://cesium.com/platform/cesium-ion/) | - | 3Dデータの変換と配信サービス |
 
 # 3 事前準備
 
@@ -79,13 +78,6 @@ npm -v
 | `VITE_FIREBASE_STORAGE_BUCKET` | Firebase Storage バケット |
 | `VITE_FIREBASE_APP_ID` | Firebase アプリ ID |
 | `VITE_FIREBASE_MEASUREMENT_ID` | Firebase 計測 ID |
-
-## （5）Cesium ion の準備
-
-3D都市モデル（3DTiles）を配信するために [Cesium ion](https://cesium.com/platform/cesium-ion/) のアカウントを取得し、以下の手順を実施します。
-
-1. Cesium ion にサインインし、3D都市モデルデータ（建物・樹木等）をアップロードします。
-2. タイル変換処理が完了したら、アセットIDとアクセストークンを控えます。
 
 
 # 4 インストール手順
@@ -229,7 +221,6 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 | 緯度 | latitude | float | |
 | 経度 | longitude | float | |
 
-緑の評価指標機能では、上記の樹木台帳テーブルに加え、プロジェクト管理および緑の評価指標（緑被率・気温低減効果等）を格納するテーブルが必要です。バックエンドAPIの仕様に合わせて追加のテーブルを作成してください。
 
 # 6 初期データの投入
 
@@ -237,17 +228,11 @@ CREATE EXTENSION IF NOT EXISTS postgis;
 
 ## （1）樹木台帳データの登録
 
-既存の樹木台帳データ（CSV、Shapefile 等）を PostgreSQL に格納します。FME Form のワークスペースを使用して変換・投入してください。
+樹木台帳データを PostgreSQL に格納します。
 
-[こちら](https://github.com/Project-PLATEAU/green-indicator/blob/main/markdown/) のドキュメントを参照し、FME Form でワークスペースを実行してください。実行の際には PostgreSQL への接続情報を求めるプロンプトが表示されますので、これに従って入力してください。
+## （2）3D都市モデルデータの登録
 
-## （2）3D都市モデルデータの登録（Cesium ion）
-
-3D都市モデル（建物モデル・樹木モデル等）を Cesium ion にアップロードし、配信の準備を行います。
-
-1. Cesium ion の管理コンソールにアクセスします。
-2. 対象データ（CityGML、3DTiles等）をアップロードし、タイル変換処理を実行します。
-3. 生成されたアセットIDを控え、`.env` の `VITE_CESIUM_ASSET_ID` に反映します。
+3D都市モデル（建物モデル・樹木モデル等）を Amazon S3に格納します。
 
 ## （3）ユーザの登録
 
