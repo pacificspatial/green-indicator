@@ -83,9 +83,7 @@
 <p>本書では、緑の評価指標機能（以下「本システム」という。）の利用環境構築手順について記載しています。本システムは、PLATEAUの3D都市モデルを活用して樹木管理業務をDXし、効率的な緑地管理の実現を目指す「樹木データを活用した温熱環境シミュレータの開発」の一部として開発されたWebアプリケーションです。</p>
 <p>本システムの構成や仕様の詳細については以下も参考にしてください。</p>
 <ul>
-<li><a href="https://www.mlit.go.jp/plateau/file/libraries/doc/*****">技術検証レポート</a></li>
-<li><a href="https://www.mlit.go.jp/plateau/use-case/uc24-17/">PLATEAU Use case「樹木データを活用した温熱環境シミュレータの開発」</a></li>
-<li><a href="https://project-plateau.github.io/green-dashboard">利用チュートリアル</a></li>
+<li><a href="https://www.mlit.go.jp/plateau/file/libraries/doc/plateau_tech_doc_0136_ver01.pdf">技術検証レポート</a></li>
 </ul>
 <h1 id="2-動作環境">2 動作環境</h1>
 <p>本システムのサーバサイドの動作環境は以下のとおりです。</p>
@@ -187,7 +185,7 @@
 <td>商用ソフトウェア</td>
 <td><a href="https://safe.com/">FME Form</a></td>
 <td>2025.x</td>
-<td>データ変換・投入処理</td>
+<td>データ変換</td>
 </tr>
 <tr>
 <td>商用クラウド</td>
@@ -258,8 +256,6 @@ npm -v
 <li>Cesium ion にサインインし、3D都市モデルデータ（建物・樹木等）をアップロードします。</li>
 <li>タイル変換処理が完了したら、アセットIDとアクセストークンを控えます。</li>
 </ol>
-<h2 id="6fme-form-の準備">（6）FME Form の準備</h2>
-<p><a href="https://safe.com/">FME Form</a> を使用してデータ変換・投入処理を実施します。FME Form は商用ソフトウェアです。業務目的で利用するには、ライセンスの購入が必要です。新規ライセンスの購入については、Pacific Spatial Solutions 株式会社（Safe Software の公式パートナー）にお問い合わせください。</p>
 <h1 id="4-インストール手順">4 インストール手順</h1>
 <h2 id="1リポジトリの取得">（1）リポジトリの取得</h2>
 <p><a href="https://github.com/Project-PLATEAU/green-indicator">こちら</a> から緑の評価指標機能のソースコードをクローンします。</p>
