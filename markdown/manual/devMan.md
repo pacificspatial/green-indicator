@@ -2,23 +2,18 @@
 
 # 1 本書について
 
-本書では、「緑の評価指標機能」は優良緑地確保計画認定制度(TSUNAG)など国の制度との連携を想定し、緑化の評価指標を算出し、指定したエリア内での緑地面積の自動算出機能や日陰シミュレーションの可視化、登録された緑地データに基づくCO₂吸収量の算出機能などを提供します。
+本書では、「緑の評価指標算出機能」は優良緑地確保計画認定制度(TSUNAG)など国の制度との連携を想定し、緑化の評価指標を算出し、指定したエリア内での緑地面積の自動算出機能や日陰シミュレーションの可視化、登録された緑地データに基づくCO₂吸収量の算出機能などを提供します。
 
-本システムは、3D都市モデルを活用した樹木管理機能及び緑の効果の定量的評価を支援する取り組みである「樹木データを活用した温熱環境シミュレータの開発」の一部として開発されたWebアプリケーションです。
-
-本システムの構成や仕様の詳細については以下も参考にしてください.
-
-- [技術検証レポート](https://www.mlit.go.jp/plateau/file/libraries/doc/plateau_tech_doc_0136_ver01.pdf)
+本システムは、Project PLATEAUの令和7年度のユースケース開発業務の一部であるUC25-11「樹木データを活用した温熱環境シミュレータの開発」で開発されたWebアプリケーションです。
 
 # 2 動作環境
 
-本システムのサーバサイドの動作環境は以下のとおりです。
-
 | 項目 | 最小動作環境 | 推奨動作環境 |
 | --- | --- | --- |
-| OS | Microsoft Windows 10 以上　または macOS 12 Monterey 以上 | 同左 |
-| CPU | Pentium 4 以上 | 同左 |
-| メモリ | 8GB以上 | 同左 |
+| OS | Amazon Linux 2023 以上（AWS EC2） | 同左 |
+| CPU | EC2 インスタンスタイプに依存 | 同左 |
+| メモリ | EC2 インスタンスタイプに依存（4GB 以上） | 同左 |
+| ストレージ | AWS S3（HW004） | 同左 |
 
 クライアント（ブラウザ）の動作環境は以下のとおりです。
 
@@ -30,10 +25,8 @@
 
 | 種別 | 名称 | バージョン | 内容 |
 | --- | --- | --- | --- |
-| オープンソースソフトウェア | [Apache HTTP Server](https://httpd.apache.org/) | 2.4.58 | Webアプリを配信するためのWebサーバ |
 | オープンソースソフトウェア | [PostGIS](https://github.com/postgis/postgis) | 3.4.1 | PostgreSQL で位置情報を扱うための拡張機能 |
 | オープンソースRDBMS | [PostgreSQL](https://github.com/postgres/postgres) | 16.2 | 各種データを格納するリレーショナルデータベース |
-| オープンソースライブラリ | [React.js](https://github.com/facebook/react) | 18.2.0 | UIを構築するためのJavaScriptライブラリ |
 | オープンソースライブラリ | [CesiumJS](https://github.com/CesiumGS/cesium) | 1.115 | 3Dビューア用ライブラリ |
 | 商用ライブラリ | [AG Grid](https://ag-grid.com/) | 31.1.1 | テーブル表示・集計ライブラリ |
 | クラウドサービス | [Firebase](https://firebase.google.com/) | - | 認証機能（Firebase Authentication）を提供 |
@@ -81,8 +74,6 @@ VITE_CESIUM_ION_TOKEN=<Cesium ionのアクセストークン>
 VITE_CESIUM_ASSET_ID=<アセットID>
 ```
 
-`.env` ファイルは `.gitignore` で管理対象外となっています。誤ってGitにコミットしないよう注意してください。
-
 （3）依存ライブラリのインストールとビルド
 
 依存パッケージをインストールし、本番用ビルドを実行します。
@@ -96,7 +87,17 @@ npm run build
 
 （4）Webサーバへの配置
 
-`dist` ディレクトリの内容を、3（2）で準備したWebサーバのドキュメントルートに配置します。SPAのため、すべてのリクエストを `index.html` にフォールバックするよう `.htaccess` を設定してください。
+`dist` ディレクトリの内容を、3（2）で準備したWebサーバのドキュメントルートに配置します。
+
+また、ドキュメントルートに以下の内容で `.htaccess` ファイルを作成してください。
+```
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+```
+**注記** 本システムは SPA（シングルページアプリケーション）のため、`/project/123` のような URL に直接アクセスするとサーバ側にファイルが存在せず 404 エラーになります。上記の設定により、すべてのリクエストを `index.html` に転送し、画面の描画を JavaScript 側で行います
 
 # 5 バックエンドAPIの構築
 
