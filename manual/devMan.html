@@ -80,14 +80,9 @@
 <h1 id="環境構築手順書">環境構築手順書</h1>
 
 <h1 id="1-本書について">1 本書について</h1>
-<p>本書では、「緑の評価指標機能」は優良緑地確保計画認定制度(TSUNAG)など国の制度との連携を想定し、緑化の評価指標を算出し、指定したエリア内での緑地面積の自動算出機能や日陰シミュレーションの可視化、登録された緑地データに基づくCO₂吸収量の算出機能などを提供します。</p>
-<p>本システムは、3D都市モデルを活用した樹木管理機能及び緑の効果の定量的評価を支援する取り組みである「樹木データを活用した温熱環境シミュレータの開発」の一部として開発されたWebアプリケーションです。</p>
-<p>本システムの構成や仕様の詳細については以下も参考にしてください.</p>
-<ul>
-<li><a href="https://www.mlit.go.jp/plateau/file/libraries/doc/plateau_tech_doc_0136_ver01.pdf">技術検証レポート</a></li>
-</ul>
+<p>本書では、「緑の評価指標算出機能」は優良緑地確保計画認定制度(TSUNAG)など国の制度との連携を想定し、緑化の評価指標を算出し、指定したエリア内での緑地面積の自動算出機能や日陰シミュレーションの可視化、登録された緑地データに基づくCO₂吸収量の算出機能などを提供します。</p>
+<p>本システムは、Project PLATEAUの令和7年度のユースケース開発業務の一部であるUC25-11「樹木データを活用した温熱環境シミュレータの開発」で開発されたWebアプリケーションです。</p>
 <h1 id="2-動作環境">2 動作環境</h1>
-<p>本システムのサーバサイドの動作環境は以下のとおりです。</p>
 <table>
 <thead>
 <tr>
@@ -99,17 +94,22 @@
 <tbody>
 <tr>
 <td>OS</td>
-<td>Microsoft Windows 10 以上　または macOS 12 Monterey 以上</td>
+<td>Amazon Linux 2023 以上（AWS EC2）</td>
 <td>同左</td>
 </tr>
 <tr>
 <td>CPU</td>
-<td>Pentium 4 以上</td>
+<td>EC2 インスタンスタイプに依存</td>
 <td>同左</td>
 </tr>
 <tr>
 <td>メモリ</td>
-<td>8GB以上</td>
+<td>EC2 インスタンスタイプに依存（4GB 以上）</td>
+<td>同左</td>
+</tr>
+<tr>
+<td>ストレージ</td>
+<td>AWS S3（HW004）</td>
 <td>同左</td>
 </tr>
 </tbody>
@@ -142,12 +142,6 @@
 <tbody>
 <tr>
 <td>オープンソースソフトウェア</td>
-<td><a href="https://httpd.apache.org/">Apache HTTP Server</a></td>
-<td>2.4.58</td>
-<td>Webアプリを配信するためのWebサーバ</td>
-</tr>
-<tr>
-<td>オープンソースソフトウェア</td>
 <td><a href="https://github.com/postgis/postgis">PostGIS</a></td>
 <td>3.4.1</td>
 <td>PostgreSQL で位置情報を扱うための拡張機能</td>
@@ -157,12 +151,6 @@
 <td><a href="https://github.com/postgres/postgres">PostgreSQL</a></td>
 <td>16.2</td>
 <td>各種データを格納するリレーショナルデータベース</td>
-</tr>
-<tr>
-<td>オープンソースライブラリ</td>
-<td><a href="https://github.com/facebook/react">React.js</a></td>
-<td>18.2.0</td>
-<td>UIを構築するためのJavaScriptライブラリ</td>
 </tr>
 <tr>
 <td>オープンソースライブラリ</td>
@@ -215,7 +203,6 @@ VITE_FIREBASE_MEASUREMENT_ID=&lt;Firebaseの計測ID&gt;
 VITE_CESIUM_ION_TOKEN=&lt;Cesium ionのアクセストークン&gt;
 VITE_CESIUM_ASSET_ID=&lt;アセットID&gt;
 </code></pre>
-<p><code>.env</code> ファイルは <code>.gitignore</code> で管理対象外となっています。誤ってGitにコミットしないよう注意してください。</p>
 <p>（3）依存ライブラリのインストールとビルド</p>
 <p>依存パッケージをインストールし、本番用ビルドを実行します。</p>
 <pre><code class="lang-bash">npm install
@@ -223,7 +210,15 @@ npm run build
 </code></pre>
 <p>ビルド成果物は <code>dist</code> ディレクトリに出力されます。</p>
 <p>（4）Webサーバへの配置</p>
-<p><code>dist</code> ディレクトリの内容を、3（2）で準備したWebサーバのドキュメントルートに配置します。SPAのため、すべてのリクエストを <code>index.html</code> にフォールバックするよう <code>.htaccess</code> を設定してください。</p>
+<p><code>dist</code> ディレクトリの内容を、3（2）で準備したWebサーバのドキュメントルートに配置します。</p>
+<p>また、ドキュメントルートに以下の内容で <code>.htaccess</code> ファイルを作成してください。</p>
+<pre><code>RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]
+</code></pre>
+<p><strong>注記</strong> 本システムは SPA（シングルページアプリケーション）のため、<code>/project/123</code> のような URL に直接アクセスするとサーバ側にファイルが存在せず 404 エラーになります。上記の設定により、すべてのリクエストを <code>index.html</code> に転送し、画面の描画を JavaScript 側で行います</p>
 <h1 id="5-バックエンドapiの構築">5 バックエンドAPIの構築</h1>
 <p>PostgreSQLに接続し、本システム用のデータベースを作成します。PostGIS拡張を有効化した上で、バックエンドAPIの実装に合わせてテーブルを作成してください。</p>
 <h1 id="6-初期データの投入">6 初期データの投入</h1>
