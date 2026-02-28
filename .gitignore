@@ -169,3 +169,5 @@ public/glyphs/
 public/resources/
 src/cesium/
 
+!.env.sample
+
