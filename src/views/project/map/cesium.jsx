@@ -65,8 +65,8 @@ const ProjectSummaryCesiumMapView = ({data, onChange, onPolygon}) => {
 
     return (
         <Box style={styles.root} ref={mapRef}>
-            <AssetLayer viewer={viewer} assetId={3984926} enable={true} accessToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzZWQ1ODBmOC1mZTUxLTQ1YjYtOWJmYi1lYWQwNmYyYjkzMTAiLCJpZCI6Nzc3MjAsImlhdCI6MTY0MDUxODAyMH0.zWLiXFgaGXueoHP0tzeDXwp3ys7dqSDqu2l3SlB80PY" />
-            <AssetLayer viewer={viewer} assetId={4134997} enable={true} accessToken="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzZWQ1ODBmOC1mZTUxLTQ1YjYtOWJmYi1lYWQwNmYyYjkzMTAiLCJpZCI6Nzc3MjAsImlhdCI6MTY0MDUxODAyMH0.zWLiXFgaGXueoHP0tzeDXwp3ys7dqSDqu2l3SlB80PY" />
+            <AssetLayer viewer={viewer} assetId={3984926} enable={true} accessToken={import.meta.env.VITE_CESIUM_ACCESS_TOKEN} />
+            <AssetLayer viewer={viewer} assetId={4134997} enable={true} accessToken={import.meta.env.VITE_CESIUM_ACCESS_TOKEN} />
         </Box>
     )
 }

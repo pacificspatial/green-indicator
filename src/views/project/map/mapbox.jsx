@@ -140,8 +140,6 @@ const ProjectMapMapboxView = ({ data, onChange }) => {
             "top-left",
         )
 
-//        m.on("click", onClick)
-
         m.on("error", e => {
             console.error("[ProjectMap]", "initial error", e)
         })

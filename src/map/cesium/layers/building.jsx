@@ -10,7 +10,7 @@ const CesiumBuildingLayer = ({viewer, enable}) => {
         if (!viewer?.scene || tileset.current || enable) { return }
 
         Cesium.IonResource.fromAssetId(3984926, {
-            accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIzZWQ1ODBmOC1mZTUxLTQ1YjYtOWJmYi1lYWQwNmYyYjkzMTAiLCJpZCI6Nzc3MjAsImlhdCI6MTY0MDUxODAyMH0.zWLiXFgaGXueoHP0tzeDXwp3ys7dqSDqu2l3SlB80PY'
+            accessToken: import.meta.env.VITE_CESIUM_ACCESS_TOKEN,
         }).then(res => {
             Cesium.Cesium3DTileset.fromUrl(res)
                 .then(_tileset => {
